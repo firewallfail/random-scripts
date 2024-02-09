@@ -1,10 +1,17 @@
-import subprocess, requests, time, sys, getopt
+import subprocess, time, sys, getopt, logging
+from urllib import request
 
 
 def send_ntfy(ntfy, auth, msg):
-    requests.post(ntfy, data=msg, headers={
-        "Authorization": f"Bearer {auth}"
-    })
+    try:
+        data = msg.encode('utf-8')
+        req = request.Request(ntfy, data=data)
+        req.add_header('Authorization', f"Bearer {auth}")
+        with request.urlopen("https://ntfy.barba.link/cghmn_status") as resp:
+            return
+    except Exception as e:
+        logging.exception(e)
+
 
 def help():
    print("is_server_up.sh: server status change notification script")
@@ -14,6 +21,7 @@ def help():
    print("\t-t|--token: required - token for ntfy server")
    print("\t-i|--interval: optional - check frequency in minutes, default 5 minutes")
    print("Example: $ python3 server_health.py -s example.com -n https://ntfy.example.com/subscription -t secret_token")
+
 
 def main(host, ntfy, auth, interval):
     if not host or not ntfy or not auth:
@@ -30,7 +38,7 @@ def main(host, ntfy, auth, interval):
 
     while True:
         message = None
-        time.sleep(interval)
+        time.sleep(5)
 
         # setup ping
         ping = subprocess.Popen(
@@ -51,6 +59,7 @@ def main(host, ntfy, auth, interval):
         
         if message:
             send_ntfy(ntfy, auth, message)
+
 
 if __name__ == "__main__":
     FIVE_MINUTES = 5 * 60
