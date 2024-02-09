@@ -26,7 +26,7 @@ def send_ntfy(ntfy, auth, msg):
 
 
 def help():
-   print("is_server_up.sh: server status change notification script")
+   print("server_health.py: server status change notification script")
    print("\t-h|--help: display this message")
    print("\t-s|--server: required - server to check ping")
    print("\t-n|--ntfy: required - ntfy server to send message to")
