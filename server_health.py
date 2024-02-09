@@ -19,7 +19,7 @@ def send_ntfy(ntfy, auth, msg):
         data = msg.encode('utf-8')
         req = request.Request(ntfy, data=data)
         req.add_header('Authorization', f"Bearer {auth}")
-        with request.urlopen("https://ntfy.barba.link/cghmn_status") as resp:
+        with request.urlopen(req) as resp:
             return
     except Exception as e:
         logging.exception(e)
