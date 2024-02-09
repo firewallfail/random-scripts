@@ -1,6 +1,18 @@
 import subprocess, time, sys, getopt, logging
 from urllib import request
 
+"""
+Script for checking if a server is up and using ntfy to send a message.
+Relatively lenient by doing 4 pings and only treating it as down if all 
+4 fail. Sends a down message if all 4 pings fail and the server was up on
+the last attempt, if any succeed and the server was down on the last attempt
+sends an up message.
+
+Might only work on linux because of the direct usage of ping and I didn't
+bother checking anything else.
+
+Usage is in help() below or just $ python3 server_health.py -h
+"""
 
 def send_ntfy(ntfy, auth, msg):
     try:
@@ -38,7 +50,7 @@ def main(host, ntfy, auth, interval):
 
     while True:
         message = None
-        time.sleep(5)
+        time.sleep(interval)
 
         # setup ping
         ping = subprocess.Popen(
